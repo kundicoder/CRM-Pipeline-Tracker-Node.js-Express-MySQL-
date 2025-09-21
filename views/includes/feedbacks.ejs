@@ -1,0 +1,12 @@
+
+<% if (typeof error_msg !== 'undefined' && String(error_msg).trim() !== '') { %>
+        <div class="alert bg-white border alert-dismissible fade show text-danger p-3" role="alert">
+            <b>Error!</b> <%= error_msg %>.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    <div class="alert alert-danger alert-dismissible text-bg-danger border-0 fade show" role="alert">
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>Error - </strong> <%= error_msg %>..
+    </div>
+<% } %>

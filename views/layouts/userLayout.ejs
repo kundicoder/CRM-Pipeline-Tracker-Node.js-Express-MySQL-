@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../includes/user/cssfiles') %>
+</head>
+<body>
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <!-- ========== Topbar Start ========== -->
+            <div class="navbar-custom">
+                <%- include('../includes/user/topnav') %>
+            </div>
+            <!-- ========== Topbar End ========== -->
+            
+
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="leftside-menu">
+                <%- include('../includes/user/sidemenu') %>
+            </div>
+            <!-- ========== Left Sidebar End ========== -->
+
+            <div class="content-page">
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid" id="userContents">
+                        <%- include('../' + partialView) %>
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <%- include('../includes/user/footer') %>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+            <!-- End Page content -->
+
+        </div>
+        <!-- END wrapper -->
+
+        <!-- Theme Settings -->
+        <%- include('../includes/user/jsfiles') %>
+
+    </body>
+</html>

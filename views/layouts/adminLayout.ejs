@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../includes/admin/cssfiles') %>
+</head>
+<body>
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <!-- ========== Topbar Start ========== -->
+            <div class="navbar-custom">
+                <%- include('../includes/admin/topnav') %>
+            </div>
+            <!-- ========== Topbar End ========== -->
+            
+
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="leftside-menu">
+                <%- include('../includes/admin/sidemenu') %>
+            </div>
+            <!-- ========== Left Sidebar End ========== -->
+
+            <div class="content-page">
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid" id="adminContents">
+                        <%- include('../' + partialView) %>
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <%- include('../includes/admin/footer') %>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+            <!-- End Page content -->
+
+        </div>
+        <!-- END wrapper -->
+
+        <!-- Theme Settings -->
+        <%- include('../includes/admin/jsfiles') %>
+
+    </body>
+</html>
