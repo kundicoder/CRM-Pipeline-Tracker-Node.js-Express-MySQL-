@@ -1,9 +1,160 @@
 // /assets/javascript/seamless-nav.js
 
 $(function () {
-  /**
-   * Re-init any plugins after AJAX content is injected
-   */
+
+
+//SUBMIT HANDLERS
+
+// 🔹 Delegated AJAX POST handler for all forms with class .ajaxForm
+//HOW TO USE example: 
+// <form id="addRoleForm" class="ajaxForm" action="/api/mct/register-roles" method="POST" data-refresh-table="rolesTable">
+// 1. Add .ajaxForm class to all forms you want to submit via AJAX:
+// 2. Data attribute for table auto-refresh: data-refresh-table="rolesTable" tells the global handler which table to reload after successful AJAX submission.
+// 3. Modal handling: The script will automatically hide the modal containing the form.
+// 4. Button spinner & disable: Automatically handled using beforeSend and restored after success/error.
+
+$(document).off("submit", ".ajaxForm").on("submit", ".ajaxForm", function(e) {
+
+    e.preventDefault();
+    let $form = $(this);
+    let formData = $form.serialize();
+    let submitBtn = $form.find("[type='submit']");
+    let defaultBtnText = submitBtn.text();
+
+    $.ajax({
+        url: $form.attr("action"),
+        method: $form.attr("method") || "POST",
+        data: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        dataType: "json",
+
+        beforeSend: function() {
+            submitBtn.html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Please wait...`).prop("disabled", true);
+        },
+
+        success: function(response) {
+            submitBtn.html(defaultBtnText).prop("disabled", false);
+
+            // Hide any modal containing the form
+            $form.closest(".modal").modal("hide");
+
+            if (response.success) {
+                // Show success modal
+                $("#successAlertModal .mt-2").text(response.message || "Operation successful.");
+                $("#successAlertModal").modal("show");
+
+                // Reset form
+                $form[0].reset();
+
+                // Auto-refresh DataTables if any
+                let tableId = $form.data("refresh-table");
+                if (tableId && $.fn.DataTable && $("#" + tableId).length) {
+                    $("#" + tableId).DataTable().ajax.reload(null, false);
+                }
+
+            } else {
+                // Show errors
+                const errors = Array.isArray(response.errors) ? response.errors : [response.error || "Something went wrong"];
+                $("#displayErrorsHere").html(errors.join("<br>"));
+                $("#warningAlertModal").modal("show");
+            }
+        },
+
+        error: function(xhr) {
+            submitBtn.html(defaultBtnText).prop("disabled", false);
+            $form.closest(".modal").modal("hide");
+
+            let errors = [];
+            try {
+                const res = JSON.parse(xhr.responseText);
+                errors = Array.isArray(res.errors) ? res.errors : [res.error || "Unexpected error occurred"];
+            } catch (e) {
+                errors = ["Unexpected error occurred"];
+            }
+
+            $("#displayErrorsHere").html(errors.join("<br>"));
+            $("#warningAlertModal").modal("show");
+        }
+    });
+}); //END ajax POST handler
+
+// 🔹 Delegated AJAX GET handler
+$(document).off("click", ".ajaxGet").on("click", ".ajaxGet", function(e) {
+    e.preventDefault();
+    let $el = $(this);
+    let url = $el.attr("href") || $el.data("url");
+    let targetId = $el.data("target") || "content";
+
+    if (!url) return;
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        dataType: "html",
+
+        beforeSend: function() {
+            $el.prop("disabled", true).addClass("loading");
+        },
+
+        success: function(response) {
+            $("#" + targetId).html(response);
+            $el.prop("disabled", false).removeClass("loading");
+            initPage(); // re-init plugins for new content
+            executeInlineScripts(response);
+        },
+
+        error: function(xhr) {
+            $el.prop("disabled", false).removeClass("loading");
+            console.error("AJAX GET failed:", xhr.status, xhr.statusText);
+        }
+    });
+});
+  //HOW TO USE
+  // 1. <a href="/mct/roles" class="ajaxGet" data-target="content">Roles</a>
+  // 2. <button class="ajaxGet" data-url="/mct/roles" data-target="content">Load Roles</button>
+  
+  // GETTING DATA BY ID/perimeter
+
+  // Example how to do it!!!!
+  // <a href="/mct/roles/2/edit"
+  //  class="ajaxGet"
+  //  data-target="roleEditModalBody" #roleEditModalBody = <div> inside the modal where AJAX GET will inject the partial form.
+  //  data-toggle="modal"
+  //  data-bs-target="#roleEditModal"> #roleEditModal = Bootstrap modal wrapper.
+  // Edit</a>
+  
+  // **NB**
+  // data-target → where to inject the partial HTML
+  // data-bs-toggle="modal" and data-bs-target="#roleEditModal" → tells Bootstrap to open the modal.
+
+  // The flow:
+  // 1. User clicks Edit → .ajaxGet loads /mct/roles/2/edit (controller returns the form partial).
+  // 2. Response HTML is injected into #roleEditModalBody.
+  // 3. Modal pops up automatically because data-bs-target="#roleEditModal" triggers it.
+
+  //HOW TO HANDLE IN CONTROLLER?
+  //   EXAMPLE
+  //   editRole: async (req, res) => {
+  //   const { id } = req.params;
+  //   const [rows] = await db.query("SELECT * FROM roles WHERE id = ?", [id]);
+  //   const role = rows[0];
+
+  //   if (!role) {
+  //     if (req.xhr) return res.status(404).send("Role not found");
+  //     req.flash("error_msg", "Role not found");
+  //     return res.redirect("/mct/roles"); replace with your_route_url
+  //   }
+
+  //   return res.render("partials/mct/editRoleForm", { role }); replace with your any_partial_name
+  // }
+
+  // #roleEditModal = Bootstrap modal wrapper.
+  // #roleEditModalBody = <div> inside the modal where AJAX GET will inject the partial form.
+
+  //END SUBMIT HANDLER
+
+  /** Re-init any plugins after AJAX content is injected */
   function initPage() {
 
     // ✅ Feather icons
