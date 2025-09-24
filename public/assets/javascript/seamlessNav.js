@@ -3,15 +3,45 @@
 $(function () {
 
 
-//SUBMIT HANDLERS
+//FORM SUBMIT HANDLERS
+
+  function refreshTableById(tableId, reloadUrl = null) {
+
+            if (!tableId) return;
+
+              const $table = $("#" + tableId);
+            if (!$table.length) return;
+
+              // Case 1: DataTables initialized
+            if ($.fn.DataTable && $table.hasClass("dataTable")) {
+                $table.DataTable().ajax.reload(null, false);
+                return;
+            }
+
+            // Case 2: Normal HTML table (fallback)
+            if (reloadUrl) {
+
+                $.ajax({
+                  url: reloadUrl,
+                  method: "GET",
+                  headers: { "X-Requested-With": "XMLHttpRequest" },
+
+                  success: function (html) {
+                  // Replace table body only (safer than replacing whole table)
+                  const $newTbody = $(html).find("#" + tableId + " tbody").html();
+                  $table.find("tbody").html($newTbody);
+                }
+            });
+          }
+    }
 
 // 🔹 Delegated AJAX POST handler for all forms with class .ajaxForm
-//HOW TO USE example: 
-// <form id="addRoleForm" class="ajaxForm" action="/api/mct/register-roles" method="POST" data-refresh-table="rolesTable">
-// 1. Add .ajaxForm class to all forms you want to submit via AJAX:
-// 2. Data attribute for table auto-refresh: data-refresh-table="rolesTable" tells the global handler which table to reload after successful AJAX submission.
-// 3. Modal handling: The script will automatically hide the modal containing the form.
-// 4. Button spinner & disable: Automatically handled using beforeSend and restored after success/error.
+// 🔹 Example usage in EJS
+//  <form id="addRoleForm" class="ajaxForm" action="/api/mct/register-roles" method="POST" data-refresh-table="rolesTable">
+//  1. Add .ajaxForm class to all forms you want to submit via AJAX:
+//  2. Data attribute for table auto-refresh: data-refresh-table="rolesTable" tells the global handler which table to reload after successful AJAX submission.
+//  3. Modal handling: The script will automatically hide the modal containing the form.
+//  4. Button spinner & disable: Automatically handled using beforeSend and restored after success/error.
 
 $(document).off("submit", ".ajaxForm").on("submit", ".ajaxForm", function(e) {
 
@@ -47,10 +77,14 @@ $(document).off("submit", ".ajaxForm").on("submit", ".ajaxForm", function(e) {
                 $form[0].reset();
 
                 // Auto-refresh DataTables if any
-                let tableId = $form.data("refresh-table");
-                if (tableId && $.fn.DataTable && $("#" + tableId).length) {
-                    $("#" + tableId).DataTable().ajax.reload(null, false);
-                }
+                // let tableId = $form.data("refresh-table");
+                // if (tableId && $.fn.DataTable && $("#" + tableId).length) {
+                //     $("#" + tableId).DataTable().ajax.reload(null, false);
+                // }
+                // ✅ Universal refresh
+                  let tableId = $form.data("refresh-table");
+                  let reloadUrl = $form.data("reload-url"); // optional: pass URL that returns the table/partial
+                  refreshTableById(tableId, reloadUrl);
 
             } else {
                 // Show errors
@@ -110,13 +144,14 @@ $(document).off("click", ".ajaxGet").on("click", ".ajaxGet", function(e) {
         }
     });
 });
-  //HOW TO USE
-  // 1. <a href="/mct/roles" class="ajaxGet" data-target="content">Roles</a>
-  // 2. <button class="ajaxGet" data-url="/mct/roles" data-target="content">Load Roles</button>
-  
-  // GETTING DATA BY ID/perimeter
 
-  // Example how to do it!!!!
+  // 🔹 Example usage in EJS
+  //  1. <a href="/mct/roles" class="ajaxGet" data-target="content">Roles</a>
+  //  2. <button class="ajaxGet" data-url="/mct/roles" data-target="content">Load Roles</button>
+  
+  //  GETTING DATA BY ID/perimeter
+
+  // 🔹 Example usage in EJS
   // <a href="/mct/roles/2/edit"
   //  class="ajaxGet"
   //  data-target="roleEditModalBody" #roleEditModalBody = <div> inside the modal where AJAX GET will inject the partial form.
@@ -133,8 +168,8 @@ $(document).off("click", ".ajaxGet").on("click", ".ajaxGet", function(e) {
   // 2. Response HTML is injected into #roleEditModalBody.
   // 3. Modal pops up automatically because data-bs-target="#roleEditModal" triggers it.
 
-  //HOW TO HANDLE IN CONTROLLER?
-  //   EXAMPLE
+  //  HOW TO HANDLE IN CONTROLLER?
+  //   🔹 Example usage in controller
   //   editRole: async (req, res) => {
   //   const { id } = req.params;
   //   const [rows] = await db.query("SELECT * FROM roles WHERE id = ?", [id]);
@@ -152,7 +187,71 @@ $(document).off("click", ".ajaxGet").on("click", ".ajaxGet", function(e) {
   // #roleEditModal = Bootstrap modal wrapper.
   // #roleEditModalBody = <div> inside the modal where AJAX GET will inject the partial form.
 
-  //END SUBMIT HANDLER
+
+// 🔹 Delegated handler for DELETE buttons/forms
+// 🔹 Example usage in EJS
+//   <form class="ajaxDelete"
+//       action="/api/mct/roles/<%= role.id %>"
+//       method="POST"
+//       data-refresh-table="rolesTable"
+//       data-reload-url="/mct/roles/table"  <!-- new -->
+//       data-row-id="<%= role.id %>">
+//   <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+//   <button type="submit" class="btn btn-danger">Delete</button>
+// </form>
+// data-refresh-table: Table ID in DOM.
+// data-reload-url: URL returning updated table/partial.
+// data-row-id: Optional if you want row-level removal.
+
+      $(document).off("submit", ".ajaxDelete").on("submit", ".ajaxDelete", function (e) {
+          e.preventDefault();
+
+          let $form = $(this);
+          let url = $form.attr("action");
+          let method = $form.attr("method") || "POST"; // usually POST
+          let refreshTable = $form.data("refresh-table");
+          let rowId = $form.data("row-id"); // optional, for manual DOM remove
+
+          // if (!confirm("Are you sure you want to delete this item?")) return; Instead use partial partials/mct/confirmdelete.ejs
+
+              $.ajax({
+                    url: url,
+                    method: method,
+                    data: $form.serialize(), // in case you send CSRF token + id
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                    
+                    success: function (response) {
+                    
+                      if (response.success) {
+                              let tableId = $form.data("refresh-table");
+                              let reloadUrl = $form.data("reload-url"); //reloadUrl (data-reload-url) → only needed for normal HTML tables.
+                              let rowId = $form.data("row-id");
+
+                              refreshTableById(tableId, reloadUrl);
+
+                            // ✅ Manual row removal fallback
+                            if (rowId && $("#" + tableId + ` tr[data-id="${rowId}"]`).length) {
+                                    $("#" + tableId + ` tr[data-id="${rowId}"]`).remove();
+                              }
+
+                            // ✅ Optional feedback
+                            $("#successAlertModal .mt-2").text(response.message || "Deleted successfully.");
+                            $("#successAlertModal").modal("show");
+                        
+                          } else {
+                                $("#displayErrorsHere").html((response.errors || ["Delete failed"]).join("<br>"));
+                                $("#warningAlertModal").modal("show");
+                        }
+                    },
+    
+                    error: function () {
+                                $("#displayErrorsHere").html("Unexpected error while deleting.");
+                                $("#warningAlertModal").modal("show");
+                    }
+                });
+          });
+
+  //END FORM SUBMIT HANDLER
 
   /** Re-init any plugins after AJAX content is injected */
   function initPage() {
