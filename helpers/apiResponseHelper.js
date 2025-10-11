@@ -2,12 +2,26 @@
 const { validationResult } = require("express-validator");
 
 module.exports = {
-    
-  success(req, res, message, redirectUrl = "back") {
+      
+  /**
+   * Success response helper
+   * @param {Request} req
+   * @param {Response} res
+   * @param {String} message - Success message
+   * @param {Object|null} data - Optional payload
+   * @param {String} redirectUrl - Redirect fallback for non-AJAX
+   */
+
+  success(req, res, data = null, message, redirectUrl = "back") { //What if I return response with data? I think we should add new parameter like 'data', sometimes I pass data sometimes I don't
 
     if (req.xhr) {
-      return res.json({ success: true, message });
+
+      const response = { success: true, message };
+
+      if (data) response.data = data; // ✅ Only include if provided
+      return res.json(response);
     }
+
     req.flash("success_msg", message);
     return res.redirect(redirectUrl);
 

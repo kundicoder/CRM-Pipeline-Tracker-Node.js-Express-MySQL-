@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../includes/admin/cssfiles') %>
+    <%- include('../includes/boss/cssfiles') %>
 </head>
 <body>
         <!-- Begin page -->
@@ -9,14 +9,14 @@
 
             <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom">
-                <%- include('../includes/admin/topnav') %>
+                <%- include('../includes/boss/topnav') %>
             </div>
             <!-- ========== Topbar End ========== -->
             
 
             <!-- ========== Left Sidebar Start ========== -->
             <div class="leftside-menu">
-                <%- include('../includes/admin/sidemenu') %>
+                <%- include('../includes/boss/sidemenu') %>
             </div>
             <!-- ========== Left Sidebar End ========== -->
 
@@ -25,7 +25,7 @@
                 <div class="content">
 
                     <!-- Start Content-->
-                    <div class="container-fluid" id="adminContents">
+                    <div class="container-fluid" id="bossContents">
                         <%- include('../' + partialView) %>
                     </div> <!-- container -->
 
@@ -33,7 +33,7 @@
 
                 <!-- Footer Start -->
                 <footer class="footer">
-                    <%- include('../includes/admin/footer') %>
+                    <%- include('../includes/boss/footer') %>
                 </footer>
                 <!-- end Footer -->
 
@@ -44,7 +44,7 @@
         <!-- END wrapper -->
 
         <!-- Theme Settings -->
-        <%- include('../includes/admin/jsfiles') %>
+        <%- include('../includes/boss/jsfiles') %>
 
     </body>
 </html>

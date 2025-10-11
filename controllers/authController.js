@@ -46,13 +46,13 @@ module.exports = {
                              }
 
                         // Successful auth: set session flags according to role
-                        if (user.role === 'user') {
+                        if (user.role === 'boss') {
 
-                                req.session.isUser = true;
+                                req.session.isBoss = true;
 
-                        } else if (user.role === 'admin') {
+                        } else if (user.role === 'marketer') {
 
-                                req.session.isAdmin = true;
+                                req.session.isMarketer = true;
                         }
 
                         req.session.user = user;
@@ -70,19 +70,19 @@ module.exports = {
 
                                     // ✅ Key Change: AJAX only returns the URL, not rendered HTML
                                     if (req.xhr) {
-                                                if (user.role === 'user') {
-                                                        return res.json({ success: true, redirectUrl: '/user' });
+                                                if (user.role === 'boss') {
+                                                        return res.json({ success: true, redirectUrl: '/boss' });
                                                     }
                                                 
-                                                if (user.role === 'admin') {
-                                                        return res.json({ success: true, redirectUrl: '/admin' });
+                                                if (user.role === 'marketer') {
+                                                        return res.json({ success: true, redirectUrl: '/marketer' });
                                                     }
                                         }
 
                                     // Non-AJAX: standard redirect
-                                    if (user.role === 'user') return res.redirect('/user');
+                                    if (user.role === 'boss') return res.redirect('/boss');
 
-                                    if (user.role === 'admin') return res.redirect('/admin');
+                                    if (user.role === 'marketer') return res.redirect('/marketer');
                                     
                                     return res.redirect('back'); // fallback
 

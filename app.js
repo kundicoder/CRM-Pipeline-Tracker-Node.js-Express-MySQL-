@@ -37,16 +37,16 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 
 app.use(session({
   key: process.env.SESSION_KEY,  // cookie name
-  secret: process.env.SESSION_SECRET,             // secret key
-  resave: false,                                  // only save if modified
-  saveUninitialized: false,    // don't save empty sessions, it will save session after user login
+  secret: process.env.SESSION_SECRET,  // secret key
+  resave: false,                       // only save if modified
+  saveUninitialized: false, // don't save empty sessions, it will save session after user login
   store: sessionStore, 
   rolling: true, //refresh session count                        
   // use MySQL for persistence
   cookie: {
     maxAge: 1000 * 60 * 10,  // 1 day
     httpOnly: true,
-    secure: false,                 // set true if HTTPS
+    secure: false,  // set true if HTTPS
     sameSite: 'Strict'
   }
 }));

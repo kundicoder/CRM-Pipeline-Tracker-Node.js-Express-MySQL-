@@ -1,0 +1,115 @@
+<!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">App</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Services</a></li>
+                                            <li class="breadcrumb-item active">Page</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Services List</h4>
+                                </div>
+                            </div>
+                        </div>
+                <!-- end page title -->
+                <!-- Clients-->
+                    <div class="row">
+                        <div class="col-12">
+                            <%- include('../../includes/feedbacks') %>
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                                    <h4 class="header-title mb-0">Services List</h4>
+                                    <button type="button" class="btn btn-success mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#registerServiceModal">Add Services</button>
+                                </div>
+
+                                <div class="card-body">
+                                    <!-- <table class="table table-striped dt-responsive nowrap w-100 datatable-buttons"> -->
+                                    <table class="table table-striped dt-responsive nowrap w-100 basic-datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="servicesHere">
+                                            <% services.forEach(function(service, index){%>
+                                            <tr>
+                                                <td><%- service.name %></td>
+                                                <td>
+                                                    <div class="d-flex flex-wrap gap-2">
+                                                         <button type="button" data-id="<%- service.id %>" class="btn btn-sm btn-warning ajaxGetService" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="warning-tooltip" data-bs-title="Edit"><i class="mdi mdi-tooltip-edit"></i> </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <%}) %>
+                                        </tbody>
+                                    </table>
+
+                                </div> <!-- end card body-->
+                            </div> <!-- end card -->
+                        </div><!-- end col-->
+                    </div> <!-- end Clients-->
+
+                    <!-- register service modal -->
+                    <div id="registerServiceModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="standard-modalLabel">Register Service</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <form action="/api/boss/register/service" class="ajaxRegisterService" method="POST">
+                                  <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Service name</label>
+                                                    <input type="text" name="service" class="form-control" data-provide="typeahead" id="the-basics" placeholder="E.g Sales LED" required>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- End register modal -->
+
+                    <!-- edit service modal -->
+                    <div id="editServiceModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="standard-modalLabel">Edit Service</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <form class="ajaxUpdateService" method="POST">
+                                  <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Service name</label>
+                                                    <input type="text" name="service" class="form-control" data-provide="typeahead" id="the-basics" required>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- End register modal -->
+
+                    <!-- Success + Errors Alert Modal -->
+                    <%- include('../../includes/statusModal') %>
+                    <!-- Success + Errors Alert Modal -->

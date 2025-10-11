@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../includes/user/cssfiles') %>
+    <%- include('../includes/marketer/cssfiles') %>
 </head>
 <body>
         <!-- Begin page -->
@@ -9,14 +9,13 @@
 
             <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom">
-                <%- include('../includes/user/topnav') %>
+                <%- include('../includes/marketer/topnav') %>
             </div>
             <!-- ========== Topbar End ========== -->
             
-
             <!-- ========== Left Sidebar Start ========== -->
             <div class="leftside-menu">
-                <%- include('../includes/user/sidemenu') %>
+                <%- include('../includes/marketer/sidemenu') %>
             </div>
             <!-- ========== Left Sidebar End ========== -->
 
@@ -25,7 +24,7 @@
                 <div class="content">
 
                     <!-- Start Content-->
-                    <div class="container-fluid" id="userContents">
+                    <div class="container-fluid" id="marketerContents">
                         <%- include('../' + partialView) %>
                     </div> <!-- container -->
 
@@ -33,7 +32,7 @@
 
                 <!-- Footer Start -->
                 <footer class="footer">
-                    <%- include('../includes/user/footer') %>
+                    <%- include('../includes/marketer/footer') %>
                 </footer>
                 <!-- end Footer -->
 
@@ -44,7 +43,7 @@
         <!-- END wrapper -->
 
         <!-- Theme Settings -->
-        <%- include('../includes/user/jsfiles') %>
+        <%- include('../includes/marketer/jsfiles') %>
 
     </body>
 </html>
