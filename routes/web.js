@@ -3,12 +3,13 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const bossController = require('../controllers/bossController');
 const bossServicesApiController = require('../controllers/bossServicesApiController');
+const bossStaffApiController = require('../controllers/bossStaffApiController');
 const marketerController = require('../controllers/marketerController');
 const marketerApiController = require('../controllers/marketerApiController');
 const logoutController = require('../controllers/logoutController');
 const checkIf = require('../middlewares/auth');
 const verifyToken = require('../middlewares/jwtauth');
-const {loginSanitizer, clientSanitizer, serviceSanitizer } = require("../validations/sanitizer");
+const { loginSanitizer, clientSanitizer, serviceSanitizer, staffSanitizer } = require("../validations/sanitizer");
 
 let routes = app => {
 
@@ -20,11 +21,17 @@ let routes = app => {
     router.get('/boss/home', checkIf.isBoss, bossController.homeIndex);
     router.get('/boss/clients', checkIf.isBoss, bossController.clients);
     router.get('/boss/services', checkIf.isBoss, bossController.services);
+    router.get('/boss/team', checkIf.isBoss, bossController.team);
 
-    //API-boss
+    //API-boss-service
     router.post('/api/boss/register/service', checkIf.isBoss, serviceSanitizer, bossServicesApiController.addService);
     router.get('/api/boss/edit/service/:id', checkIf.isBoss, bossServicesApiController.getService);
     router.post('/api/boss/service/update/:id', checkIf.isBoss, serviceSanitizer, bossServicesApiController.updateService);
+    
+    //API-boss-staff
+    router.post('/api/boss/register/staff', checkIf.isBoss, staffSanitizer, bossStaffApiController.addStaff);
+    router.get('/api/boss/edit/staff/:id', checkIf.isBoss, bossStaffApiController.getStaff);
+    router.post('/api/boss/staff/update/:id', checkIf.isBoss, staffSanitizer, bossStaffApiController.updateStaff);
 
     //Marketer
     router.get('/marketer', checkIf.isMarketer, marketerController.home);

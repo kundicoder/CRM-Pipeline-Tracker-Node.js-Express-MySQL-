@@ -60,5 +60,21 @@ module.exports = {
                                         req.flash('error_msg', 'Internal server error');
                                         return res.redirect('back');
                 }
+        },
+
+     team: async (req, res) => {
+                
+          try {
+                 const auth = req.session.user;
+                 const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
+
+                 renderWithLayout(req, res, 'layouts/bossLayout', 'partials/boss/team', {users: team}, 'bossContents');
+
+            } catch (error) {
+                        console.log(error);
+                        if (req.xhr) return res.status(500).json({ error: 'Internal server error' });
+                                        req.flash('error_msg', 'Internal server error');
+                                        return res.redirect('back');
+                }
         }
 }

@@ -1,0 +1,156 @@
+<!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">App</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Marketing Team</a></li>
+                                            <li class="breadcrumb-item active">Page</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Marketing Team</h4>
+                                </div>
+                            </div>
+                        </div>
+                <!-- end page title -->
+                <!-- Clients-->
+                    <div class="row">
+                        <div class="col-12">
+                            <%- include('../../includes/feedbacks') %>
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                                    <h4 class="header-title mb-0">Marketing Team</h4>
+                                    <button type="button" class="btn btn-success mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#registerStaffModal">Add Staff</button>
+                                </div>
+
+                                <div class="card-body">
+                                    <!-- <table class="table table-striped dt-responsive nowrap w-100 datatable-buttons"> -->
+                                    <table class="table table-striped dt-responsive nowrap w-100 basic-datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="staffHere">
+                                            <% users.forEach(function(user, index){%>
+                                            <tr>
+                                                <td><%- user.firstname %>&nbsp;<%- user.surname %></td>
+                                                <td><%- user.email %></td>
+                                                <td><%- user.phone %></td>
+                                                <td>
+                                                    <div class="d-flex flex-wrap gap-2">
+                                                         <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-warning ajaxGetUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="warning-tooltip" data-bs-title="Edit"><i class="mdi mdi-tooltip-edit"></i> </button>
+                                                         <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-danger ajaxBlockUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="danger-tooltip" data-bs-title="Block"><i class="bi bi-person-lock"></i> </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <%}) %>
+                                        </tbody>
+                                    </table>
+
+                                </div> <!-- end card body-->
+                            </div> <!-- end card -->
+                        </div><!-- end col-->
+                    </div> <!-- end Clients-->
+
+                    <!-- register team -->
+                    <div id="registerStaffModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="standard-modalLabel">Register Staff</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <form action="/api/boss/register/staff" class="ajaxRegisterStaff" method="POST">
+                                  <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">First name</label>
+                                                    <input type="text" name="firstname" class="form-control" data-provide="typeahead" id="the-basics" placeholder="E.g John" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Surname</label>
+                                                    <input type="text" name="surname" class="form-control" data-provide="typeahead" id="the-basics" placeholder="E.g Doe">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Phone</label>
+                                                    <input type="tel" name="phone" class="form-control" data-provide="typeahead" id="the-basics" placeholder="E.g 0719123271" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">e-mail</label>
+                                                    <input type="mail" name="email" class="form-control" data-provide="typeahead" id="the-basics" placeholder="E.g john@example.com" required>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- End register team modal -->
+
+                    <!-- edit staff -->
+                    <div id="editStaffModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="standard-modalLabel">Edit Staff</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <form class="ajaxUpdateStaff" method="POST">
+                                  <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">First name</label>
+                                                    <input type="text" name="firstname" class="form-control" data-provide="typeahead" id="the-basics" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Surname</label>
+                                                    <input type="text" name="surname" class="form-control" data-provide="typeahead" id="the-basics">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Phone</label>
+                                                    <input type="tel" name="phone" class="form-control" data-provide="typeahead" id="the-basics" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">e-mail</label>
+                                                    <input type="mail" name="email" class="form-control" data-provide="typeahead" id="the-basics" required>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- End edit staff modal -->
+
+                    <!-- Success + Errors Alert Modal -->
+                    <%- include('../../includes/statusModal') %>
+                    <!-- Success + Errors Alert Modal -->
