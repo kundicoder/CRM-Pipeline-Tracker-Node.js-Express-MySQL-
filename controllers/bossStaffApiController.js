@@ -29,12 +29,12 @@ module.exports = {
                         
                 } else {
                         const [result] = await db.query('INSERT INTO users(firstname, surname, phone, email, password, created_at, created_by) VALUES(?, ?, ?, ?, ?, ?, ?)', [capitalizeFirst(firstname), capitalizeFirst(surname), normalizePhone(phone), normalizeEmail(email), hashedPassword, created_at, auth.surname]);
-                        const [users] = await db.query('SELECT * FROM users ORDER BY firstname ASC');
+                        const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
                         
                         if (result.affectedRows > 0 && users.length > 0) {
 
                                 if (req.xhr) {
-                                    return res.json({ success: true, message: "Staff added successfully.", users: users});
+                                    return res.json({ success: true, message: "Staff added successfully.", users: team});
                                 }
 
                                 req.flash("success_msg", "Staff added successfully.");
@@ -91,7 +91,7 @@ module.exports = {
 
                 const [result] = await db.query('UPDATE users SET firstname = ?, surname = ?, email = ?, phone = ?, updated_at = ? WHERE id = ?', [ capitalizeFirst(firstname), capitalizeFirst(surname), normalizeEmail(email), normalizePhone(phone), updated_at, id ]);
                 const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
-                        
+                     
                 if (result.affectedRows > 0 && team.length > 0) {
 
                     if (req.xhr) {
@@ -103,6 +103,35 @@ module.exports = {
                 }
 
                 return apiResponse.error(req, res, ["Failed to updated staff."]);
+                
+
+            } catch (error) {
+                      console.log(error);
+                      return apiResponse.error(req, res, ["Internal server error"], 500);
+                }
+        },
+
+   blockStaff: async (req, res) => {
+        
+          try {
+                const {id} = req.params;
+                const auth = req.session.user;
+                const updated_at = new Date();
+
+                const [result] = await db.query('UPDATE users SET active = ?, updated_at = ? WHERE id = ?', [ 'no', updated_at, id ]);
+                const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
+                        
+                if (result.affectedRows > 0 && team.length > 0) {
+
+                    if (req.xhr) {
+                            return res.json({ success: true, message: "Staff blocked successfully.", users: team});
+                        }
+
+                        req.flash("success_msg", "Staff blocked successfully.");
+                        return res.redirect('back');
+                }
+
+                return apiResponse.error(req, res, ["Failed to block staff."]);
                 
 
             } catch (error) {

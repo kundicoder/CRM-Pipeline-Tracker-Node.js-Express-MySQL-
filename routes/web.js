@@ -32,6 +32,7 @@ let routes = app => {
     router.post('/api/boss/register/staff', checkIf.isBoss, staffSanitizer, bossStaffApiController.addStaff);
     router.get('/api/boss/edit/staff/:id', checkIf.isBoss, bossStaffApiController.getStaff);
     router.post('/api/boss/staff/update/:id', checkIf.isBoss, staffSanitizer, bossStaffApiController.updateStaff);
+    router.post('/api/boss/block/staff/:id', checkIf.isBoss, bossStaffApiController.blockStaff);
 
     //Marketer
     router.get('/marketer', checkIf.isMarketer, marketerController.home);

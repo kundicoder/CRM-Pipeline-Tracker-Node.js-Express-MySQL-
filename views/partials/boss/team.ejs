@@ -32,23 +32,35 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="staffHere">
-                                            <% users.forEach(function(user, index){%>
-                                            <tr>
-                                                <td><%- user.firstname %>&nbsp;<%- user.surname %></td>
-                                                <td><%- user.email %></td>
-                                                <td><%- user.phone %></td>
-                                                <td>
-                                                    <div class="d-flex flex-wrap gap-2">
-                                                         <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-warning ajaxGetUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="warning-tooltip" data-bs-title="Edit"><i class="mdi mdi-tooltip-edit"></i> </button>
-                                                         <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-danger ajaxBlockUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="danger-tooltip" data-bs-title="Block"><i class="bi bi-person-lock"></i> </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <%}) %>
+                                        <tbody class="staffHere"><% users.forEach(function(user, index) { %>
+                                        <tr>
+                                            <td><%- user.firstname %> <%- user.surname %></td>
+                                            <td><%- user.email %></td>
+                                            <td><%- user.phone %></td>
+                                            <td>
+                                                <% if (user.active === 'yes') { %>
+                                                    <span class="badge bg-primary-subtle text-primary rounded-pill">Active</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-danger-subtle text-danger rounded-pill">Blocked</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-warning ajaxGetUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="warning-tooltip" data-bs-title="Edit">
+                                                            <i class="mdi mdi-tooltip-edit"></i>
+                                                    </button>
+
+                                                    <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-danger ajaxBlockUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="danger-tooltip" data-bs-title="Block Staff">
+                                                            <i class="bi bi-person-lock"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                <% }); %>
                                         </tbody>
                                     </table>
 
@@ -150,6 +162,29 @@
                                 </div><!-- /.modal-content -->
                             </div><!-- /.modal-dialog -->
                         </div><!-- End edit staff modal -->
+
+                        <!-- Block staff Modal -->
+                        <div id="blockStaffModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header modal-colored-header bg-danger">
+                                            <h4 class="modal-title" id="danger-header-modalLabel">Block Staff</h4>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                                <h5 class="mt-0">Proceed with blocking?</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form id="blockUserForm" class="ajaxBlockStaff">
+                                                <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Yes, proceed</button>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                        </div>
+                    <!-- end block staff modal -->
 
                     <!-- Success + Errors Alert Modal -->
                     <%- include('../../includes/statusModal') %>
