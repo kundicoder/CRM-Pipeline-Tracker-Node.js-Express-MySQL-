@@ -21,7 +21,7 @@
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                                     <h4 class="header-title mb-0">Clients List</h4>
-                                    <button type="button" class="btn btn-success mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#addClientModal">Add Client</button>
+                                    <button type="button" class="btn btn-success mt-2 mt-sm-0 ajaxGetStaff">Assign Client</button>
                                 </div>
 
                                 <div class="card-body">
@@ -60,15 +60,15 @@
                         </div><!-- end col-->
                     </div> <!-- end Clients-->
 
-                        <!-- Standard modal content -->
-                        <div id="addClientModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                        <!-- assign ClientModal modal -->
+                        <div id="assignClientModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title" id="standard-modalLabel">Register Client</h4>
+                                        <h4 class="modal-title" id="standard-modalLabel">Assign Client to Staff</h4>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                <form action="/api/marketer/register/client" class="ajaxRegisterClient" method="POST">
+                                <form class="ajaxAssignClient" method="POST">
                                   <input type="hidden" name="_csrf" value="<%- csrftoken %>">
                                     <div class="modal-body">
                                         <div class="row">
@@ -106,6 +106,11 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Position</label>
                                                     <input type="text" name="position" class="form-control" data-provide="typeahead" id="the-basics" placeholder="E.g Business Manager" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                                                <div class="mb-3 marketingTeamHere">
+                                                    
                                                 </div>
                                             </div>
                                         </div> <!-- end col -->

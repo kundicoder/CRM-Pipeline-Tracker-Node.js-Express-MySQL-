@@ -52,6 +52,12 @@ const clientSanitizer = [
     .isLength({ min: 2, max: 100 }).withMessage("Position must be 2–100 characters long")
     .matches(/^[a-zA-Z\s'-]+$/).withMessage("Position must only contain letters and spaces")
     .escape(),
+
+  body("staffId")
+    .optional({ checkFalsy: true }) // ✅ only validates if provided and not falsy
+    .trim()
+    .isInt({ min: 1 }).withMessage("Invalid Staff ID")
+    .toInt()
 ];
 
 const serviceSanitizer = [

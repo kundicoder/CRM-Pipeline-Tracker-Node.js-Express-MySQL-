@@ -4,6 +4,7 @@ const authController = require('../controllers/authController');
 const bossController = require('../controllers/bossController');
 const bossServicesApiController = require('../controllers/bossServicesApiController');
 const bossStaffApiController = require('../controllers/bossStaffApiController');
+const bossClientApiController = require('../controllers/bossClientApiController');
 const marketerController = require('../controllers/marketerController');
 const marketerApiController = require('../controllers/marketerApiController');
 const logoutController = require('../controllers/logoutController');
@@ -33,6 +34,10 @@ let routes = app => {
     router.get('/api/boss/edit/staff/:id', checkIf.isBoss, bossStaffApiController.getStaff);
     router.post('/api/boss/staff/update/:id', checkIf.isBoss, staffSanitizer, bossStaffApiController.updateStaff);
     router.post('/api/boss/block/staff/:id', checkIf.isBoss, bossStaffApiController.blockStaff);
+    router.get('/api/boss/get/staff', checkIf.isBoss, bossStaffApiController.getMarketer);
+
+    //API-boss-client
+    router.post('/api/boss/assign/client', checkIf.isBoss, clientSanitizer, bossClientApiController.assignStaff);
 
     //Marketer
     router.get('/marketer', checkIf.isMarketer, marketerController.home);

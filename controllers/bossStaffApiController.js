@@ -138,5 +138,19 @@ module.exports = {
                       console.log(error);
                       return apiResponse.error(req, res, ["Internal server error"], 500);
                 }
+        },
+
+    getMarketer: async (req, res) => {
+                
+          try {
+                 const [result] = await db.query('SELECT * FROM users WHERE role = ? AND active = ?', ['marketer', 'yes']);
+                 
+                 if (!result.length) return res.status(404).json({ success: false, error: ['Not found'] });
+                 return res.json({ success: true, marketers: result });
+
+            } catch (error) {
+                       console.log(error);
+                       return res.status(500).json({ success:false, error: ['Internal server error'] });
+                }
         }
 }
