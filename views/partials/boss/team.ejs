@@ -53,10 +53,16 @@
                                                     <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-warning ajaxGetUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="warning-tooltip" data-bs-title="Edit">
                                                             <i class="mdi mdi-tooltip-edit"></i>
                                                     </button>
-
+                                                <% if (user.active === 'yes') { %>
                                                     <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-danger ajaxBlockUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="danger-tooltip" data-bs-title="Block Staff">
                                                             <i class="bi bi-person-lock"></i>
                                                     </button>
+                                                <% } else { %>
+                                                    <button type="button" data-id="<%- user.id %>" class="btn btn-sm btn-success ajaxUnBlockUser" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="success-tooltip" data-bs-title="Unblock Staff">
+                                                            <i class="bi bi-person-lock"></i>
+                                                    </button>
+                                                <% } %>
+                                                    
                                                 </div>
                                             </td>
                                         </tr>
@@ -184,7 +190,30 @@
                                     </div><!-- /.modal-content -->
                                 </div><!-- /.modal-dialog -->
                         </div>
-                    <!-- end block staff modal -->
+                        <!-- end block staff modal -->
+
+                        <!-- unBlock staff Modal -->
+                        <div id="unBlockStaffModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="success-header-modalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header modal-colored-header bg-success">
+                                            <h4 class="modal-title" id="success-header-modalLabel">Un-block Staff</h4>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                                <h5 class="mt-0">Proceed with un-blocking?</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form id="unBlockUserForm" class="ajaxUnBlockStaff">
+                                                <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-success">Yes, proceed</button>
+                                            </form>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                        </div>
+                    <!-- end unblock staff modal -->
 
                     <!-- Success + Errors Alert Modal -->
                     <%- include('../../includes/statusModal') %>

@@ -40,7 +40,12 @@
                                         <tbody class="clientsHere">
                                             <% clients.forEach(function(client, index){%>
                                             <tr>
-                                                <td><%- client.firstname %>&nbsp;<%- client.surname %></td>
+                                                <% if (client.created_by == user.id) { %>
+                                                        <td style="color: green; background-color: grey;"><%- client.firstname %>&nbsp;<%- client.surname %></td>
+                                                <% } else { %>
+                                                        <td><%- client.firstname %>&nbsp;<%- client.surname %></td>
+                                                <% } %>
+
                                                 <td><%- client.email %></td>
                                                 <td><%- client.phone %></td>
                                                 <td><%- client.company %></td>

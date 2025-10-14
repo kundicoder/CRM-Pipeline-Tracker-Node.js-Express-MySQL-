@@ -152,5 +152,34 @@ module.exports = {
                        console.log(error);
                        return res.status(500).json({ success:false, error: ['Internal server error'] });
                 }
+        },
+
+    unBlockStaff: async (req, res) => {
+        
+          try {
+                const {id} = req.params;
+                const auth = req.session.user;
+                const updated_at = new Date();
+
+                const [result] = await db.query('UPDATE users SET active = ?, updated_at = ? WHERE id = ?', [ 'yes', updated_at, id ]);
+                const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
+                        
+                if (result.affectedRows > 0 && team.length > 0) {
+
+                    if (req.xhr) {
+                            return res.json({ success: true, message: "Staff un-blocked successfully.", users: team});
+                        }
+
+                        req.flash("success_msg", "Staff un-blocked successfully.");
+                        return res.redirect('back');
+                }
+
+                return apiResponse.error(req, res, ["Failed to un-block staff."]);
+                
+
+            } catch (error) {
+                      console.log(error);
+                      return apiResponse.error(req, res, ["Internal server error"], 500);
+                }
         }
 }

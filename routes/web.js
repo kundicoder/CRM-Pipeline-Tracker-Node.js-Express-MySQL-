@@ -35,6 +35,8 @@ let routes = app => {
     router.post('/api/boss/staff/update/:id', checkIf.isBoss, staffSanitizer, bossStaffApiController.updateStaff);
     router.post('/api/boss/block/staff/:id', checkIf.isBoss, bossStaffApiController.blockStaff);
     router.get('/api/boss/get/staff', checkIf.isBoss, bossStaffApiController.getMarketer);
+    router.post('/api/boss/unblock/staff/:id', checkIf.isBoss, bossStaffApiController.unBlockStaff);
+
 
     //API-boss-client
     router.post('/api/boss/assign/client', checkIf.isBoss, clientSanitizer, bossClientApiController.assignStaff);
