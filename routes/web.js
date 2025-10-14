@@ -21,6 +21,7 @@ let routes = app => {
     router.get('/boss', checkIf.isBoss, bossController.home);
     router.get('/boss/home', checkIf.isBoss, bossController.homeIndex);
     router.get('/boss/clients', checkIf.isBoss, bossController.clients);
+    router.get('/boss/pipelines', checkIf.isBoss, bossController.pipelines);
     router.get('/boss/services', checkIf.isBoss, bossController.services);
     router.get('/boss/team', checkIf.isBoss, bossController.team);
 

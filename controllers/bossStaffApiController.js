@@ -143,7 +143,7 @@ module.exports = {
     getMarketer: async (req, res) => {
                 
           try {
-                 const [result] = await db.query('SELECT * FROM users WHERE role = ? AND active = ?', ['marketer', 'yes']);
+                 const [result] = await db.query('SELECT * FROM users WHERE role = ? AND active = ? ORDER BY firstname ASC', ['marketer', 'yes']);
                  
                  if (!result.length) return res.status(404).json({ success: false, error: ['Not found'] });
                  return res.json({ success: true, marketers: result });

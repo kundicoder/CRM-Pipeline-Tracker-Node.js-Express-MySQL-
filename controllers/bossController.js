@@ -47,6 +47,21 @@ module.exports = {
                 }
         },
 
+     pipelines: async (req, res) => {
+                
+          try {
+                 const auth = req.session.user;
+                 const [pipelines] = await db.query('SELECT clients.id AS clientId, clients.firstname, clients.surname, pipelines.id AS pipelineId, pipelines.agenda, pipelines.status, pipelines.created_at, pipelines.created_by FROM clients JOIN pipelines ON clients.id = pipelines.client_id ORDER BY pipelines.id DESC');
+                 renderWithLayout(req, res, 'layouts/bossLayout', 'partials/boss/pipelines', {pipelines: pipelines}, 'bossContents');
+
+            } catch (error) {
+                        console.log(error);
+                        if (req.xhr) return res.status(500).json({ error: 'Internal server error' });
+                                        req.flash('error_msg', 'Internal server error');
+                                        return res.redirect('back');
+                }
+        },
+
      services: async (req, res) => {
                 
           try {

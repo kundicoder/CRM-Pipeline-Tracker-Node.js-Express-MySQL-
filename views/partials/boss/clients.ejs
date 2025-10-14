@@ -41,7 +41,7 @@
                                             <% clients.forEach(function(client, index){%>
                                             <tr>
                                                 <% if (client.created_by == user.id) { %>
-                                                        <td style="color: green; background-color: grey;"><%- client.firstname %>&nbsp;<%- client.surname %></td>
+                                                        <td><span class="badge badge-outline-secondary"><%- client.firstname %>&nbsp;<%- client.surname %></span></td>
                                                 <% } else { %>
                                                         <td><%- client.firstname %>&nbsp;<%- client.surname %></td>
                                                 <% } %>

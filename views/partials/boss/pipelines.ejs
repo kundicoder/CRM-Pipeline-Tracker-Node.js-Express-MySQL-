@@ -1,0 +1,76 @@
+<!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">App</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Pipelines</a></li>
+                                            <li class="breadcrumb-item active">Page</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Pipelines List</h4>
+                                </div>
+                            </div>
+                        </div>
+                <!-- end page title -->
+                <!-- Clients-->
+                    <div class="row">
+                        <div class="col-12">
+                            <%- include('../../includes/feedbacks') %>
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                                    <h4 class="header-title mb-0">Pipelines List</h4>
+                                    <!-- <button type="button" class="btn btn-success mt-2 mt-sm-0 ajaxGetStaff">Assign Pipeline</button> -->
+                                </div>
+
+                                <div class="card-body">
+                                    <!-- <table class="table table-striped dt-responsive nowrap w-100 datatable-buttons"> -->
+                                    <table class="table table-striped dt-responsive nowrap w-100 basic-datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Phone</th>
+                                                <th>Company</th>
+                                                <th>Position</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="clientsHere">
+                                            <% pipelines.forEach(function(pipeline, index){%>
+                                            <tr>
+                                                <% if (pipeline.created_by == user.id) { %>
+                                                        <td><span class="badge badge-outline-secondary"><%- pipeline.firstname %>&nbsp;<%- pipeline.surname %></span></td>
+                                                <% } else { %>
+                                                        <td><%- pipeline.firstname %>&nbsp;<%- pipeline.surname %></td>
+                                                <% } %>
+
+                                                <td><%- pipeline.phone %></td>
+                                                <td><%- pipeline.company %></td>
+                                                <td><%- pipeline.position %></td>
+
+                                                <% if (pipeline.status == 'closed') { %>
+                                                        <td><span class="badge bg-purple">Closed</span></td>
+                                                <% } else { %>
+                                                        <td><span class="badge bg-warning">Negotiation</span></td>
+                                                <% } %>
+
+                                                <td>
+                                                    <div class="d-flex flex-wrap gap-2">
+                                                         <button type="button" data-id="<%- pipeline.id %>" class="btn btn-sm btn-info ajaxPipelineProgress" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="info-tooltip" data-bs-title="Pipeline Progress"><i class="bi bi-info-lg"></i> </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <%}) %>
+                                        </tbody>
+                                    </table>
+
+                                </div> <!-- end card body-->
+                            </div> <!-- end card -->
+                        </div><!-- end col-->
+                    </div> <!-- end Clients-->
+
+                    <!-- Success + Errors Alert Modal -->
+                    <%- include('../../includes/statusModal') %>
+                    <!-- Success + Errors Alert Modal -->
