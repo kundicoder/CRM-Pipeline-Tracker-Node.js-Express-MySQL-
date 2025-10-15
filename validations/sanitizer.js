@@ -97,4 +97,37 @@ const staffSanitizer = [
     .normalizeEmail()
 ];
 
-module.exports = { loginSanitizer, clientSanitizer, serviceSanitizer, staffSanitizer }
+const pipelineSanitizer = [
+
+  // Single client ID (integer)
+  body("clientId")
+    .notEmpty().withMessage("Please select a client.")
+    .isInt({ min: 1 }).withMessage("Invalid client selection.")
+    .toInt(),
+
+  // One or more service IDs (array or single value)
+  body("serviceIDs")
+    .notEmpty().withMessage("Please select at least one service.")
+    .custom(value => {
+      if (Array.isArray(value)) {
+        // Ensure all elements are numeric
+        return value.every(v => Number.isInteger(Number(v)));
+      }
+      // If single value
+      return Number.isInteger(Number(value));
+    })
+    .withMessage("Invalid service ID(s).")
+    .customSanitizer(value => {
+      // Convert to array of integers
+      return Array.isArray(value)
+        ? value.map(v => parseInt(v, 10))
+        : [parseInt(value, 10)];
+    }),
+
+  body("agenda")
+    .trim()
+    .notEmpty().withMessage("Agenda is required.")
+    .isLength({ min: 5, max: 500 }).withMessage("Agenda must be between 5 and 500 characters long.")
+];
+
+module.exports = { loginSanitizer, clientSanitizer, serviceSanitizer, staffSanitizer, pipelineSanitizer }

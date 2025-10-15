@@ -51,7 +51,7 @@ module.exports = {
                 
           try {
                  const auth = req.session.user;
-                 const [pipelines] = await db.query('SELECT clients.id AS clientId, clients.firstname, clients.surname, pipelines.id AS pipelineId, pipelines.agenda, pipelines.status, pipelines.created_at, pipelines.created_by FROM clients JOIN pipelines ON clients.id = pipelines.client_id ORDER BY pipelines.id DESC');
+                 const [pipelines] = await db.query('SELECT clients.id AS clientId, clients.firstname, clients.surname, clients.company, clients.phone, clients.position, clients.assigned_to, pipelines.id AS pipelineId, pipelines.agenda, pipelines.status, pipelines.created_at, pipelines.created_by FROM clients JOIN pipelines ON clients.id = pipelines.client_id ORDER BY pipelines.id DESC');
                  renderWithLayout(req, res, 'layouts/bossLayout', 'partials/boss/pipelines', {pipelines: pipelines}, 'bossContents');
 
             } catch (error) {
@@ -84,6 +84,21 @@ module.exports = {
                  const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
 
                  renderWithLayout(req, res, 'layouts/bossLayout', 'partials/boss/team', {users: team}, 'bossContents');
+
+            } catch (error) {
+                        console.log(error);
+                        if (req.xhr) return res.status(500).json({ error: 'Internal server error' });
+                                        req.flash('error_msg', 'Internal server error');
+                                        return res.redirect('back');
+                }
+        },
+
+     reports: async (req, res) => {
+                
+          try {
+                 const [team] = await db.query('SELECT * FROM users WHERE role = ? ORDER BY firstname ASC', ['marketer']);
+
+                 renderWithLayout(req, res, 'layouts/bossLayout', 'partials/boss/reports', {marketers: team}, 'bossContents');
 
             } catch (error) {
                         console.log(error);

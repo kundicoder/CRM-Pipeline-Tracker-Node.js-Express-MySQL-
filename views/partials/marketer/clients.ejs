@@ -40,7 +40,9 @@
                                         <tbody class="clientsHere">
                                             <% clients.forEach(function(client, index){%>
                                             <tr>
-                                                <td><%- client.firstname %>&nbsp;<%- client.surname %></td>
+                                                <%  if(client.assigned_to == user.id){%><td><span class="badge badge-outline-secondary"><%- client.firstname %>&nbsp;<%- client.surname %></span></td> <%}
+                                                    else{%> <td><%- client.firstname %>&nbsp;<%- client.surname %></td> <%}
+                                                %>
                                                 <td><%- client.email %></td>
                                                 <td><%- client.phone %></td>
                                                 <td><%- client.company %></td>

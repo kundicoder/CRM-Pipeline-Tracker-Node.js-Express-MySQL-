@@ -20,7 +20,7 @@
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                                     <h4 class="header-title mb-0">Pipelines List</h4>
-                                    <button type="button" class="btn btn-success mt-2 mt-sm-0">Add Pipeline</button>
+                                    <button type="button" class="btn btn-success mt-2 mt-sm-0 ajaxCheckClients">Add Pipeline</button>
                                 </div>
 
                                 <div class="card-body">
@@ -29,22 +29,41 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
+                                                <th>Phone</th>
+                                                <th>Company</th>
                                                 <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="pipelinesHere">
+
+                                        <% pipelines.forEach(function(pipeline, index){%>
                                             <tr>
-                                                <td>Tiger Nixon</td>
-                                                <td>System Architect</td>
-                                                <td>Edinburgh</td>
-                                                <td>61</td>
-                                                <td>2011/04/25</td>
-                                                <td>$320,800</td>
+                                                <% if (pipeline.assigned_to == user.id) { %>
+                                                        <td><span class="badge badge-outline-secondary"><%- pipeline.firstname %>&nbsp;<%- pipeline.surname %></span></td>
+                                                <% } else { %>
+                                                        <td><%- pipeline.firstname %>&nbsp;<%- pipeline.surname %></td>
+                                                <% } %>
+
+                                                <td><%- pipeline.phone %></td>
+                                                <td><%- pipeline.company %></td>
+                                                <td><%- pipeline.position %></td>
+
+                                                <% if (pipeline.status == 'closed') { %>
+                                                        <td><span class="badge bg-purple">Closed</span></td>
+                                                <% } else { %>
+                                                        <td><span class="badge bg-warning">Negotiation</span></td>
+                                                <% } %>
+
+                                                <td>
+                                                    <div class="d-flex flex-wrap gap-2">
+                                                         <button type="button" data-id="<%- pipeline.id %>" class="btn btn-sm btn-info ajaxPipelineProgress" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="info-tooltip" data-bs-title="Pipeline Progress"><i class="bi bi-info-lg"></i> </button>
+                                                    </div>
+                                                </td>
                                             </tr>
+                                        <%}) %>
+
                                         </tbody>
                                     </table>
 
@@ -52,6 +71,41 @@
                             </div> <!-- end card -->
                         </div><!-- end col-->
                     </div> <!-- end pipelines-->
+
+                    <!-- Add pipeline modal -->
+                    <div id="addPipelineModal" class="modal fade" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="standard-modalLabel">Add Pipeline</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <form class="ajaxAddPipeline" method="POST">
+                                  <input type="hidden" name="_csrf" value="<%- csrftoken %>">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12 col-xl-12 col-sm-12">
+                                                <div class="mb-3 clientsHere"> </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-12 col-sm-12">
+                                                <div class="mb-3 servicesHere"> </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-12 col-sm-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">State Agenda</label>
+                                                    <textarea class="form-control" name="agenda" rows="3" placeholder="Please brief your agenda here..." required></textarea>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                    </div><!-- End add pipeline modal -->
                     
                     <!-- Success + Errors Alert Modal -->
                     <%- include('../../includes/statusModal') %>

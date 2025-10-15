@@ -10,7 +10,7 @@ const marketerApiController = require('../controllers/marketerApiController');
 const logoutController = require('../controllers/logoutController');
 const checkIf = require('../middlewares/auth');
 const verifyToken = require('../middlewares/jwtauth');
-const { loginSanitizer, clientSanitizer, serviceSanitizer, staffSanitizer } = require("../validations/sanitizer");
+const { loginSanitizer, clientSanitizer, serviceSanitizer, staffSanitizer, pipelineSanitizer } = require("../validations/sanitizer");
 
 let routes = app => {
 
@@ -24,6 +24,7 @@ let routes = app => {
     router.get('/boss/pipelines', checkIf.isBoss, bossController.pipelines);
     router.get('/boss/services', checkIf.isBoss, bossController.services);
     router.get('/boss/team', checkIf.isBoss, bossController.team);
+    router.get('/boss/reports', checkIf.isBoss, bossController.reports);
 
     //API-boss-service
     router.post('/api/boss/register/service', checkIf.isBoss, serviceSanitizer, bossServicesApiController.addService);
@@ -37,7 +38,6 @@ let routes = app => {
     router.post('/api/boss/block/staff/:id', checkIf.isBoss, bossStaffApiController.blockStaff);
     router.get('/api/boss/get/staff', checkIf.isBoss, bossStaffApiController.getMarketer);
     router.post('/api/boss/unblock/staff/:id', checkIf.isBoss, bossStaffApiController.unBlockStaff);
-
 
     //API-boss-client
     router.post('/api/boss/assign/client', checkIf.isBoss, clientSanitizer, bossClientApiController.assignStaff);
@@ -53,6 +53,10 @@ let routes = app => {
     router.post('/api/marketer/register/client', checkIf.isMarketer, clientSanitizer, marketerApiController.addClient);
     router.get('/api/marketer/edit/client/:id', checkIf.isMarketer, marketerApiController.getClient);
     router.post('/api/marketer/client/update/:id', checkIf.isMarketer, clientSanitizer, marketerApiController.updateClient);
+    router.get('/api/marketer/check/client', checkIf.isMarketer, marketerApiController.checkClients);
+
+    //API - Marketer, pipeline
+    router.post('/api/marketer/add/pipeline', checkIf.isMarketer, pipelineSanitizer, marketerApiController.addPipeline);
 
     router.post('/logout', logoutController.logout);
 

@@ -35,7 +35,9 @@ module.exports = {
     pipelines: async (req, res) => {
                 
           try {
-                 renderWithLayout(req, res, 'layouts/marketerLayout', 'partials/marketer/pipelines', {}, 'marketerContents'); //without data
+                 const auth = req.session.user;
+                 const [pipelines] = await db.query('SELECT clients.id AS clientId, clients.firstname, clients.surname, clients.company, clients.position, clients.phone, clients.assigned_to, pipelines.id AS pipelineId, pipelines.agenda, pipelines.status, pipelines.created_at, pipelines.created_by FROM clients JOIN pipelines ON clients.id = pipelines.client_id WHERE pipelines.created_by = ? ORDER BY pipelines.id DESC', [auth.id]);
+                 renderWithLayout(req, res, 'layouts/marketerLayout', 'partials/marketer/pipelines', {pipelines: pipelines}, 'marketerContents'); //without data
 
             } catch (error) {
                         console.log(error);
@@ -49,7 +51,7 @@ module.exports = {
                 
           try {
                  const auth = req.session.user;
-                 const [clients] = await db.query('SELECT * FROM clients WHERE created_by = ?', [auth.id]);
+                 const [clients] = await db.query('SELECT * FROM clients WHERE created_by = ? OR assigned_to = ?', [auth.id, auth.id]);
                  renderWithLayout(req, res, 'layouts/marketerLayout', 'partials/marketer/clients', {clients: clients}, 'marketerContents'); //without data
 
             } catch (error) {
